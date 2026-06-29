@@ -1,10 +1,11 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { FilmDto, FilmsDto } from './dto/films.dto';
+import { GetFilmsDto } from './dto/get-films.dto';
+import { GetFilmScheduleDto } from './dto/get-schedule.dto';
 
 @Controller('films')
 export class FilmsController {
   @Get()
-  findAll(): FilmsDto {
+  findAll(): GetFilmsDto {
     return {
       total: 1,
       items: [
@@ -24,17 +25,20 @@ export class FilmsController {
   }
 
   @Get(':id/schedule')
-  findById(@Param('id') id: string): FilmDto {
+  findById(@Param('id') _id: string): GetFilmScheduleDto {
     return {
-      id: id,
-      rating: 0,
-      director: '',
-      tags: [],
-      title: 'Id route test',
-      about: '',
-      description: '',
-      image: '',
-      cover: '',
+      total: 0,
+      items: [
+        {
+          id: '',
+          daytime: '',
+          hall: 0,
+          rows: 0,
+          seats: 0,
+          price: 0,
+          taken: [],
+        },
+      ],
     };
   }
 }

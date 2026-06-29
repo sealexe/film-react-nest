@@ -1,6 +1,6 @@
 //TODO описать DTO для запросов к /films
 
-export class FilmDto {
+export class GetFilmDto {
   id: string;
   rating: number;
   director: string;
@@ -12,7 +12,7 @@ export class FilmDto {
   cover: string;
 }
 
-export class FilmsDto {
+export class GetFilmsDto {
   total: number;
-  items: FilmDto[];
+  items: GetFilmDto[];
 }

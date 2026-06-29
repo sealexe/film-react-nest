@@ -1,14 +1,14 @@
-export class ScheduleDto {
+export class GetScheduleItemDto {
   id: string;
   daytime: string;
-  hall: string;
+  hall: number;
   rows: number;
   seats: number;
   price: number;
   taken: string[];
 }
 
-export class FilmScheduleDto {
+export class GetFilmScheduleDto {
   total: number;
-  items: ScheduleDto[];
+  items: GetScheduleItemDto[];
 }
