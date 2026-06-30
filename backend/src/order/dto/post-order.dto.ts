@@ -14,3 +14,9 @@ export class PostOrdersDto {
   total: number;
   items: PostOrderDto[];
 }
+
+export class CreateOrderDto {
+  email: string;
+  phone: string;
+  tickets: PostOrderDto[];
+}

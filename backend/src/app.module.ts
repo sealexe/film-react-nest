@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as path from 'node:path';
-
 import { configProvider } from './app.config.provider';
 import { FilmsController } from './films/films.controller';
 import { FilmsService } from './films/films.service';
@@ -18,7 +17,12 @@ import { FilmsMongoDbRepository } from './repository/films.repository';
       isGlobal: true,
       cache: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost/films'),
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('DATABASE_URL'),
+      }),
+    }),
     MongooseModule.forFeature([{ name: Film.name, schema: FilmSchema }]),
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'public', 'content', 'afisha'),
