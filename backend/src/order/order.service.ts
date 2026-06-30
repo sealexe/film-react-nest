@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { FilmsMongoDbRepository } from 'src/repository/films.repository';
 import { PostOrderDto, PostOrdersDto } from './dto/post-order.dto';
 
@@ -25,7 +26,7 @@ export class OrderService {
       if (targetSession.taken.includes(takenSeat)) {
         throw new BadRequestException('Место уже занято');
       }
-      items.push({ ...order, id: crypto.randomUUID() });
+      items.push({ ...order, id: randomUUID() });
       await this.filmsRepository.updateSeats(targetSession.id, takenSeat);
     }
     return {
