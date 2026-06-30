@@ -1,16 +1,16 @@
 //TODO реализовать DTO для /orders
 
-export class OrderDto {
+export class PostOrderDto {
   film: string;
   session: string;
   daytime: string;
   row: number;
   seat: number;
   price: number;
-  id: string;
+  id?: string;
 }
 
-export class OrdersDto {
+export class PostOrdersDto {
   total: number;
-  items: OrderDto[];
+  items: PostOrderDto[];
 }

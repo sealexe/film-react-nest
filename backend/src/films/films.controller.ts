@@ -1,44 +1,18 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { GetFilmsDto } from './dto/get-films.dto';
 import { GetFilmScheduleDto } from './dto/get-schedule.dto';
+import { FilmsService } from './films.service';
 
 @Controller('films')
 export class FilmsController {
+  constructor(private readonly filmService: FilmsService) {}
   @Get()
-  findAll(): GetFilmsDto {
-    return {
-      total: 1,
-      items: [
-        {
-          id: '1',
-          rating: 8.5,
-          director: 'Тест',
-          tags: ['Драма'],
-          title: 'Тестовый фильм',
-          about: 'Описание',
-          description: 'Полное описание',
-          image: '/bg1s.jpg',
-          cover: '/bg1c.jpg',
-        },
-      ],
-    };
+  findAll(): Promise<GetFilmsDto> {
+    return this.filmService.findAll();
   }
 
   @Get(':id/schedule')
-  findById(@Param('id') _id: string): GetFilmScheduleDto {
-    return {
-      total: 0,
-      items: [
-        {
-          id: '',
-          daytime: '',
-          hall: 0,
-          rows: 0,
-          seats: 0,
-          price: 0,
-          taken: [],
-        },
-      ],
-    };
+  findById(@Param('id') id: string): Promise<GetFilmScheduleDto> {
+    return this.filmService.findById(id);
   }
 }

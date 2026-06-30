@@ -56,4 +56,11 @@ export class FilmsMongoDbRepository implements FilmsRepository {
       items: film.schedule.map(this.getfilmScheduleMapperFn()),
     };
   }
+
+  async updateSeats(sessionId: string, seat: string): Promise<void> {
+    await this.filmModel.findOneAndUpdate(
+      { 'schedule.id': sessionId },
+      { $push: { 'schedule.$.taken': seat } },
+    );
+  }
 }

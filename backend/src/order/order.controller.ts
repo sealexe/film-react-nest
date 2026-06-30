@@ -1,13 +1,12 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { OrderDto, OrdersDto } from './dto/order.dto';
+import { PostOrderDto, PostOrdersDto } from './dto/post-order.dto';
+import { OrderService } from './order.service';
 
 @Controller('order')
 export class OrderController {
+  constructor(private readonly orderService: OrderService) {}
   @Post()
-  create(@Body() _body: OrderDto[]): OrdersDto {
-    return {
-      total: 0,
-      items: [],
-    };
+  create(@Body() body: PostOrderDto[]): Promise<PostOrdersDto> {
+    return this.orderService.createOrder(body);
   }
 }
