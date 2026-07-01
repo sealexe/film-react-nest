@@ -3482,7 +3482,7 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libphonenumber-js@^1.11.1:
+libphonenumber-js@^1.11.1, libphonenumber-js@^1.13.7:
   version "1.13.7"
   resolved "https://registry.npmjs.org/libphonenumber-js/-/libphonenumber-js-1.13.7.tgz"
   integrity sha512-rvr3HIMdOgzhz1RFGjftji+wjoAFlzhqCNqJOU/MKTZQ8d9NZxAR/tI+0weDicyoucqVR0U1GCniqHJ0f8aM2A==

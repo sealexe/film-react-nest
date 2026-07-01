@@ -8,7 +8,7 @@ import {
   IsString,
   IsArray,
   ValidateNested,
-  Matches,
+  IsPhoneNumber,
 } from 'class-validator';
 
 export class PostOrderDto {
@@ -24,8 +24,10 @@ export class PostOrderDto {
   seat: number;
   @IsNumber()
   price: number;
+  @IsOptional()
   @IsString()
   day: string;
+  @IsOptional()
   @IsString()
   time: string;
   @IsOptional()
@@ -45,8 +47,7 @@ export class PostOrdersDto {
 export class CreateOrderDto {
   @IsEmail()
   email: string;
-  @IsString()
-  @Matches(/^\+7\d{10}$/)
+  @IsPhoneNumber('RU')
   phone: string;
   @IsArray()
   @ValidateNested({ each: true })
