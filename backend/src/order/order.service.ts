@@ -16,7 +16,14 @@ export class OrderService {
     for (const order of orders) {
       const { session, row, seat } = order;
       const takenSeat = `${row}:${seat}`;
-      const schedule = (await this.filmsRepository.findById(order.film)).items;
+
+      const film = await this.filmsRepository.findById(order.film);
+
+      if (!film) {
+        throw new NotFoundException('Фильм не найден!');
+      }
+
+      const schedule = film.items;
       const targetSession = schedule.find((item) => item.id === session);
 
       if (!targetSession) {

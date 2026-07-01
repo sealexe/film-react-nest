@@ -48,8 +48,11 @@ export class FilmsMongoDbRepository implements FilmsRepository {
     };
   }
 
-  async findById(id: string): Promise<GetFilmScheduleDto> {
+  async findById(id: string): Promise<GetFilmScheduleDto | null> {
     const film = await this.filmModel.findOne({ id });
+    if (!film) {
+      return null;
+    }
     const total = film.schedule.length;
     return {
       total,

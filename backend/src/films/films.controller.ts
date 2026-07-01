@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { GetFilmsDto } from './dto/get-films.dto';
 import { GetFilmScheduleDto } from './dto/get-schedule.dto';
 import { FilmsService } from './films.service';
@@ -12,7 +12,9 @@ export class FilmsController {
   }
 
   @Get(':id/schedule')
-  findById(@Param('id') id: string): Promise<GetFilmScheduleDto> {
+  findById(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<GetFilmScheduleDto> {
     return this.filmService.findById(id);
   }
 }
