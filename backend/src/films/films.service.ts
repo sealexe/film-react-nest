@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FilmsMongoDbRepository } from 'src/repository/films.repository';
+import { FilmsPostgresRepository } from 'src/repository/films.repository';
 
 @Injectable()
 export class FilmsService {
-  constructor(private readonly filmsRepository: FilmsMongoDbRepository) {}
+  constructor(private readonly filmsRepository: FilmsPostgresRepository) {}
 
   async findAll() {
     return this.filmsRepository.findAll();

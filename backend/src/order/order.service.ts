@@ -4,12 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { FilmsMongoDbRepository } from 'src/repository/films.repository';
 import { PostOrderDto, PostOrdersDto } from './dto/post-order.dto';
+import { FilmsPostgresRepository } from 'src/repository/films.repository';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly filmsRepository: FilmsMongoDbRepository) {}
+  constructor(private readonly filmsRepository: FilmsPostgresRepository) {}
 
   async createOrder(orders: PostOrderDto[]): Promise<PostOrdersDto> {
     const items = [];
