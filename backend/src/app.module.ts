@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
-import { configProvider } from './app.config.provider';
+import { AppConfig, AppConfigModule, CONFIG } from './app.config.provider';
 import { FilmsController } from './films/films.controller';
 import { FilmsService } from './films/films.service';
 import { OrderController } from './order/order.controller';
 import { OrderService } from './order/order.service';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Film } from './films/film.entity';
 import { Schedule } from './films/schedule.entity';
@@ -21,12 +20,13 @@ import { FILMS_REPOSITORY } from './repository/films.repository.interface';
       cache: true,
     }),
     TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: configService.getOrThrow<'postgres'>('DATABASE_DRIVER'),
-        url: configService.get<string>('DATABASE_URL'),
-        username: configService.get<string>('DATABASE_USERNAME'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
+      imports: [AppConfigModule],
+      inject: [CONFIG],
+      useFactory: (config: AppConfig) => ({
+        type: config.database.driver,
+        url: config.database.url,
+        username: config.database.username,
+        password: config.database.password,
         entities: [Film, Schedule],
         synchronize: false,
       }),
@@ -39,7 +39,6 @@ import { FILMS_REPOSITORY } from './repository/films.repository.interface';
   ],
   controllers: [FilmsController, OrderController],
   providers: [
-    configProvider,
     FilmsService,
     OrderService,
     {
