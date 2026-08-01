@@ -1,15 +1,21 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { FilmsMongoDbRepository } from 'src/repository/films.repository';
 import { PostOrderDto, PostOrdersDto } from './dto/post-order.dto';
+import {
+  FILMS_REPOSITORY,
+  FilmsRepository,
+} from 'src/repository/films.repository.interface';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly filmsRepository: FilmsMongoDbRepository) {}
+  constructor(
+    @Inject(FILMS_REPOSITORY) private readonly filmsRepository: FilmsRepository,
+  ) {}
 
   async createOrder(orders: PostOrderDto[]): Promise<PostOrdersDto> {
     const items = [];

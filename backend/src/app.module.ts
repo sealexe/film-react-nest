@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
-import { configProvider } from './app.config.provider';
+import { AppConfig, AppConfigModule, CONFIG } from './app.config.provider';
 import { FilmsController } from './films/films.controller';
 import { FilmsService } from './films/films.service';
 import { OrderController } from './order/order.controller';
 import { OrderService } from './order/order.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Film, FilmSchema } from './films/film.schema';
-import { FilmsMongoDbRepository } from './repository/films.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Film } from './films/film.entity';
+import { Schedule } from './films/schedule.entity';
+import { FilmsPostgresRepository } from './repository/films.repository';
+import { FILMS_REPOSITORY } from './repository/films.repository.interface';
 
 @Module({
   imports: [
@@ -17,25 +19,32 @@ import { FilmsMongoDbRepository } from './repository/films.repository';
       isGlobal: true,
       cache: true,
     }),
-    MongooseModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URL'),
+    TypeOrmModule.forRootAsync({
+      imports: [AppConfigModule],
+      inject: [CONFIG],
+      useFactory: (config: AppConfig) => ({
+        type: config.database.driver,
+        url: config.database.url,
+        username: config.database.username,
+        password: config.database.password,
+        entities: [Film, Schedule],
+        synchronize: false,
       }),
     }),
-    MongooseModule.forFeature([{ name: Film.name, schema: FilmSchema }]),
+    TypeOrmModule.forFeature([Film, Schedule]),
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'public', 'content', 'afisha'),
       serveRoot: '/content/afisha',
     }),
-    // @todo: Добавьте раздачу статических файлов из public
   ],
   controllers: [FilmsController, OrderController],
   providers: [
-    configProvider,
     FilmsService,
     OrderService,
-    FilmsMongoDbRepository,
+    {
+      provide: FILMS_REPOSITORY,
+      useClass: FilmsPostgresRepository,
+    },
   ],
 })
 export class AppModule {}
