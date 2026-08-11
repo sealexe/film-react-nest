@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: student
+      POSTGRES_DB: films
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
+  backend:
+    build:
+      context: ./backend
+    image: ghcr.io/sealexe/film-react-nest-backend:latest
+    restart: unless-stopped
+    environment:
+      DATABASE_DRIVER: postgres
+      DATABASE_URL: postgres://student:student@postgres:5432/films
+      DATABASE_USERNAME: student
+      DATABASE_PASSWORD: student
+      LOG_FORMAT: dev
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+    image: ghcr.io/sealexe/film-react-nest-frontend:latest
+    restart: "no"
+    volumes:
+      - frontend_dist:/app/dist
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: ./nginx
+    image: ghcr.io/sealexe/film-react-nest-nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - frontend_dist:/var/www
+    networks:
+      - app-network
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pg_data:
+  pgadmin_data:
+  frontend_dist:
