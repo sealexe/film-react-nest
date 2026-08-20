@@ -50,3 +50,19 @@ jobs:
             push: true
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
+  deploy:
+    needs: build-and-publish-latest
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/review-2'
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/film-react-nest
+            docker compose pull
+            docker compose up -d
+
