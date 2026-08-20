@@ -48,7 +48,7 @@ services:
     image: ghcr.io/sealexe/film-react-nest-frontend:latest
     restart: "no"
     volumes:
-      - frontend_dist:/app/dist
+      - frontend_dist:/app/volume
     networks:
       - app-network
 
