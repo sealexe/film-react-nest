@@ -1,5 +1,9 @@
 # FILM!
 
+### Cсылка на задеплоенный проект:
+
+http://films45.nomorepartiessite.ru/
+
 ## Установка
 
 ### MongoDB
