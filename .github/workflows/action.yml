@@ -7,7 +7,7 @@ on: [push]
 jobs:
   build-and-publish-latest:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/review-2'
+    if: github.ref == 'refs/heads/review-2' || github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: write
@@ -53,7 +53,7 @@ jobs:
   deploy:
     needs: build-and-publish-latest
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/review-2'
+    if: github.ref == 'refs/heads/review-2' || github.ref == 'refs/heads/main'
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@029f5b4aeeeb58fdfe1410a5d17f967dacf36262
